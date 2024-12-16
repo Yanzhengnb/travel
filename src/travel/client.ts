@@ -1,7 +1,7 @@
 // src/Travel/client.ts
 import axios from 'axios';
 
-const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:4000/api';
+const API_BASE = process.env.REACT_APP_API_BASE || 'https://travel-serves.onrender.com';
 const TRAVEL_API = `${API_BASE}/travels`;
 
 export const findAllTravels = async () => {
