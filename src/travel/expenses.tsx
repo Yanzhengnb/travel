@@ -28,7 +28,7 @@ function Expenses() {
     const [showSettlement, setShowSettlement] = useState(false);
 
     const exchangeRate = 17.5;
-    const people = ['nini', 'wanwan', 'lyz', '弓长堇力'];
+    const people = ['nini', 'wanwan', 'lyz', 'ZQ'];
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         date.setDate(date.getDate() + 1);
