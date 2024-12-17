@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import * as client from './client';
+import { FaBed, FaBus, FaGamepad, FaUtensils } from 'react-icons/fa';
 
 function TravelEditor() {
   const navigate = useNavigate();
@@ -21,9 +23,15 @@ function TravelEditor() {
     description: travelData.description || '',
     activities: travelData.activities || [],
     url: travelData.url || '',
-    address: travelData.address || ''
+    address: travelData.address || '',
+    tags: [] as string[]
   });
-
+  const TAG_CONFIG = {
+    '吃喝': { icon: FaUtensils, color: '#e74c3c' },
+    '玩乐': { icon: FaGamepad, color: '#3498db' },
+    '住宿': { icon: FaBed, color: '#2ecc71' },
+    '交通': { icon: FaBus, color: '#f1c40f' }
+};
   const convertToUSD = (value: string) => {
     const numValue = parseFloat(value);
     if (isNaN(numValue)) return 0;
@@ -151,6 +159,38 @@ function TravelEditor() {
             onChange={(e) => setTravel({ ...travel, address: e.target.value })}
             placeholder="具体地址"
           />
+        </div>
+
+        <div className="mb-3">
+          <label className="form-label">标签</label>
+          <div className="d-flex gap-2 flex-wrap">
+            {Object.keys(TAG_CONFIG).map((tag) => (
+              <div 
+                key={tag}
+                className="form-check"
+                style={{ minWidth: '100px' }}
+              >
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id={`tag-${tag}`}
+                  checked={travel.tags.includes(tag)}
+                  onChange={(e) => {
+                    const newTags = e.target.checked
+                      ? [...travel.tags, tag]
+                      : travel.tags.filter(t => t !== tag);
+                    setTravel({ ...travel, tags: newTags });
+                  }}
+                />
+                <label 
+                  className="form-check-label" 
+                  htmlFor={`tag-${tag}`}
+                >
+                  {tag}
+                </label>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mb-3">
