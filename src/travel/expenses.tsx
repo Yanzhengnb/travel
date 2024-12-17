@@ -19,7 +19,7 @@ function Expenses() {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [newExpense, setNewExpense] = useState<Partial<Expense>>({
         date: new Date().toISOString().split('T')[0],
-        amount: 0,
+        amount: undefined,
         currency: 'USD',
         description: '',
         payer: '',
@@ -280,8 +280,11 @@ function Expenses() {
                                     type="number"
                                     className="form-control"
                                     placeholder="金额"
-                                    value={newExpense.amount}
-                                    onChange={(e) => setNewExpense({ ...newExpense, amount: Number(e.target.value) })}
+                                    value={newExpense.amount === undefined ? '' : newExpense.amount}
+                                    onChange={(e) => setNewExpense({ 
+        ...newExpense, 
+        amount: e.target.value ? Number(e.target.value) : undefined 
+    })}
                                     required
 
                                     step="0.01"
