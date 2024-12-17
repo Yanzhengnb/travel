@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as client from './client';
-import { testConnection } from './client';
-import { FaTrash, FaEdit, FaDollarSign, FaCalendarAlt, FaInfoCircle, FaLink,FaPlus, FaWallet, FaMapMarkerAlt, FaBed } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaDollarSign, FaCalendarAlt, FaInfoCircle, FaLink, FaWallet, FaMapMarkerAlt, FaBed, FaPlus, FaGamepad, FaBus, FaUtensils } from 'react-icons/fa';
 
 function TravelList() {
     const [travels, setTravels] = useState<any[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const navigate = useNavigate();
-
+    const TAG_CONFIG = {
+        '吃喝': { icon: FaUtensils, color: '#e74c3c' },
+        '玩乐': { icon: FaGamepad, color: '#3498db' },
+        '住宿': { icon: FaBed, color: '#2ecc71' },
+        '交通': { icon: FaBus, color: '#f1c40f' }
+    };
     const fetchTravels = async () => {
         const response = await client.findAllTravels();
         const sortedTravels = response.sort((a: any, b: any) =>
@@ -50,6 +55,51 @@ function TravelList() {
     const tampaTrips = travels.filter(t => t.destination.toLowerCase().includes('tampa'));
     const mexicoTrips = travels.filter(t => t.destination.toLowerCase().includes('mexico'));
 
+    const filteredTravels = (trips: any[]) => {
+        if (selectedTags.length === 0) return trips;
+        return trips.filter(trip => 
+            trip.tags?.some((tag: string) => selectedTags.includes(tag))
+        );
+    };
+
+    const TagFilters = () => (
+        <div className="mb-4">
+            <h5 className="mb-3">按标签筛选</h5>
+            <div className="d-flex gap-2 flex-wrap">
+                {Object.entries(TAG_CONFIG).map(([tag, config]) => {
+                    const TagIcon = config.icon;
+                    const isSelected = selectedTags.includes(tag);
+                    
+                    return (
+                        <button
+                            key={tag}
+                            className={`btn ${isSelected ? 'btn-primary' : 'btn-outline-primary'}`}
+                            style={{
+                                backgroundColor: isSelected ? config.color : 'white',
+                                borderColor: config.color,
+                                color: isSelected ? 'white' : config.color,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onClick={() => {
+                                setSelectedTags(prev => 
+                                    isSelected 
+                                        ? prev.filter(t => t !== tag)
+                                        : [...prev, tag]
+                                );
+                            }}
+                        >
+                            <TagIcon size={14} />
+                            {tag}
+                        </button>
+                    );
+                })}
+            </div>
+        </div>
+    );
+
     const TravelSection = ({ title, trips, destination }: { title: string, trips: any[], destination: string }) => (
         <div className="mb-5">
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -63,17 +113,18 @@ function TravelList() {
                 </Link>
             </div>
             <div className="travel-list">
-                {trips.map((travel) => (
-                    <div className="mb-3" key={travel._id} style={{ width: '100%' }}>
-                        <div
-                            className="card"
-                            style={{
-                                cursor: travel.url ? 'pointer' : 'default',
-                                transition: 'transform 0.2s',
-                                boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-                                fontSize: '1.1rem',
-                                margin: '15px 0'
-                            }}
+                {filteredTravels(trips).length > 0 ? (
+                    filteredTravels(trips).map((travel) => (
+                        <div className="mb-3" key={travel._id} style={{ width: '100%' }}>
+                            <div
+                                className="card"
+                                style={{
+                                    cursor: travel.url ? 'pointer' : 'default',
+                                    transition: 'transform 0.2s',
+                                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    fontSize: '1.1rem',
+                                    margin: '15px 0'
+                                }}
 
                             onMouseOver={(e) => {
                                 if (travel.url) {
@@ -86,20 +137,50 @@ function TravelList() {
                         >
                             <div className="card-body" style={{ padding: '20px' }}>
                                 <div className="d-flex justify-content-between align-items-start">
-                                    <h5 
-                                        className="card-title mb-0" 
-                                        style={{ 
-                                            fontSize: '1.4rem',
-                                            cursor: travel.url ? 'pointer' : 'default' 
-                                        }}
-                                        onClick={() => {
-                                            if (travel.url) {
-                                                window.open(travel.url, '_blank');
-                                            }
-                                        }}
-                                    >
-                                        {travel.title}
-                                    </h5>
+                                    <div>
+                                        <h5 
+                                            className="card-title mb-2" 
+                                            style={{ 
+                                                fontSize: '1.4rem',
+                                                cursor: travel.url ? 'pointer' : 'default' 
+                                            }}
+                                            onClick={() => {
+                                                if (travel.url) {
+                                                    window.open(travel.url, '_blank');
+                                                }
+                                            }}
+                                        >
+                                            {travel.title}
+                                        </h5>
+                                        
+                                        <div className="d-flex gap-2 mb-2">
+                                            {travel.tags?.map((tag: string) => {
+                                                const tagConfig = TAG_CONFIG[tag as keyof typeof TAG_CONFIG];
+                                                if (!tagConfig) return null;
+                                                
+                                                const TagIcon = tagConfig.icon;
+                                                return (
+                                                    <span 
+                                                        key={tag}
+                                                        className="badge"
+                                                        style={{
+                                                            backgroundColor: tagConfig.color,
+                                                            color: 'white',
+                                                            padding: '5px 10px',
+                                                            borderRadius: '15px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '5px',
+                                                            fontSize: '0.9rem'
+                                                        }}
+                                                    >
+                                                        <TagIcon size={14} />
+                                                        {tag}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
 
                                     <div className="d-flex align-items-center" style={{ gap: '25px', fontSize: '1.2rem' }}>
                                         {travel.url && (
@@ -108,7 +189,7 @@ function TravelList() {
                                             </div>
                                         )}
 
-                                        {(travel.startDate || travel.endDate) && (
+{(travel.startDate || travel.endDate) && (
     <div className="text-muted">
         <FaCalendarAlt />
         {travel.startDate && (
@@ -144,76 +225,80 @@ function TravelList() {
                                             </div>
                                         )}
 
-                                        <div className="d-flex">
-                                            <button
-                                                onClick={() => {
-                                                    navigate(`/travel/edit/${travel._id}`, {
-                                                        state: {
-                                                            travel,
-                                                            editMode: true,
-                                                            defaultDestination: travel.destination,
-                                                            title: travel.title,
-                                                            startDate: travel.startDate,
-                                                            endDate: travel.endDate,
-                                                            budget: travel.budget,
-                                                            description: travel.description,
-                                                            url: travel.url
-                                                        }
-                                                    });
-                                                }}
-                                                className="btn btn-link text-primary me-2"
-                                                style={{ padding: '4px' }}
-                                            >
-                                                <FaEdit />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(travel._id)}
-                                                className="btn btn-link text-danger"
-                                                style={{
-                                                    padding: '8px',
-                                                    fontSize: '1.2rem'
-                                                }}
-                                            >
-                                                <FaTrash />
-                                            </button>
+                                            <div className="d-flex">
+                                                <button
+                                                    onClick={() => {
+                                                        navigate(`/travel/edit/${travel._id}`, {
+                                                            state: {
+                                                                travel,
+                                                                editMode: true,
+                                                                defaultDestination: travel.destination,
+                                                                title: travel.title,
+                                                                startDate: travel.startDate,
+                                                                endDate: travel.endDate,
+                                                                budget: travel.budget,
+                                                                description: travel.description,
+                                                                url: travel.url
+                                                            }
+                                                        });
+                                                    }}
+                                                    className="btn btn-link text-primary me-2"
+                                                    style={{ padding: '4px' }}
+                                                >
+                                                    <FaEdit />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(travel._id)}
+                                                    className="btn btn-link text-danger"
+                                                    style={{
+                                                        padding: '8px',
+                                                        fontSize: '1.2rem'
+                                                    }}
+                                                >
+                                                    <FaTrash />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            {travel.description && (
+                                <div className="mt-3 text-muted" style={{
+                                    borderTop: '1px solid #eee',
+                                    paddingTop: '12px',
+                                    fontSize: '1.1rem'
+                                }}>
+                                    <FaInfoCircle className="me-2" />
+                                    {travel.description}
+                                </div>
+                            )}
+                            {travel.address && (
+                                <div className="mt-3" style={{
+                                    borderTop: '1px solid #eee',
+                                    paddingTop: '12px'
+                                }}>
+                                    <a
+                                        href={`maps://?q=${encodeURIComponent(travel.address)}`}
+                                        className="text-primary"
+                                        style={{
+                                            textDecoration: 'none',
+                                            fontSize: '1.1rem',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <FaMapMarkerAlt className="me-2" />
+                                        {travel.address}
+                                    </a>
+                                </div>
+                            )}
                         </div>
-                        {travel.description && (
-                            <div className="mt-3 text-muted" style={{
-                                borderTop: '1px solid #eee',
-                                paddingTop: '12px',
-                                fontSize: '1.1rem'
-                            }}>
-                                <FaInfoCircle className="me-2" />
-                                {travel.description}
-                            </div>
-                        )}
-                        {travel.address && (
-                            <div className="mt-3" style={{
-                                borderTop: '1px solid #eee',
-                                paddingTop: '12px'
-                            }}>
-                                <a
-                                    href={`maps://?q=${encodeURIComponent(travel.address)}`}
-                                    className="text-primary"
-                                    style={{
-                                        textDecoration: 'none',
-                                        fontSize: '1.1rem',
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}
-                                >
-                                    <FaMapMarkerAlt className="me-2" />
-                                    {travel.address}
-                                </a>
-                            </div>
-                        )}
+                    ))
+                ) : (
+                    <div className="alert alert-info">
+                        没有符合所选标签的旅行计划
                     </div>
-                ))}
-
+                )}
             </div>
         </div>
     );
@@ -248,6 +333,7 @@ function TravelList() {
             </div>
 
             <div className="flex-grow-1 p-4">
+                <TagFilters />
 
                 <TravelSection
                     title="Tampa"
@@ -264,5 +350,4 @@ function TravelList() {
         </div>
     );
 }
-
 export default TravelList;
