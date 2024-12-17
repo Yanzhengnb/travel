@@ -86,7 +86,18 @@ function TravelList() {
                         >
                             <div className="card-body" style={{ padding: '20px' }}>
                                 <div className="d-flex justify-content-between align-items-start">
-                                    <h5 className="card-title mb-0" style={{ fontSize: '1.4rem' }}>
+                                    <h5 
+                                        className="card-title mb-0" 
+                                        style={{ 
+                                            fontSize: '1.4rem',
+                                            cursor: travel.url ? 'pointer' : 'default' 
+                                        }}
+                                        onClick={() => {
+                                            if (travel.url) {
+                                                window.open(travel.url, '_blank');
+                                            }
+                                        }}
+                                    >
                                         {travel.title}
                                     </h5>
 
