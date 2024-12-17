@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import * as client from './client';
 import { FaTrash, FaEdit, FaUserFriends, FaDollarSign, FaBed, FaMapMarkerAlt, FaWallet } from 'react-icons/fa';
 
@@ -14,6 +14,8 @@ interface Expense {
 }
 
 function Expenses() {
+    const location = useLocation();
+    const { state } = location;
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [newExpense, setNewExpense] = useState<Partial<Expense>>({
         date: new Date().toISOString().split('T')[0],
@@ -70,7 +72,15 @@ function Expenses() {
     useEffect(() => {
         fetchExpenses();
     }, []);
-
+    useEffect(() => {
+        if (state) {
+            setNewExpense({
+                amount: state.amount,
+                description: state.description,
+                date: state.date
+            });
+        }
+    }, [state]);
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newExpense.currency === 'MXN' && newExpense.amount) {
