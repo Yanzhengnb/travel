@@ -126,7 +126,19 @@ function TravelList() {
 )}
 
                                         {travel.budget > 0 && (
-                                            <div className="text-muted">
+                                            <div 
+                                                className="text-muted"
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    navigate('/expenses', {
+                                                        state: {
+                                                            amount: travel.budget,
+                                                            description: travel.title,
+                                                            date: travel.startDate
+                                                        }
+                                                    });
+                                                }}
+                                            >
                                                 <FaDollarSign />
                                                 {travel.budget}
                                             </div>
