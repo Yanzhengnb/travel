@@ -185,15 +185,18 @@ function TravelList() {
     );
 
     return (
-        <div>
+        
+        <div className="d-flex">
+            
+          <div>
             <button onClick={handleTest}>
                 测试连接
             </button>
             {testResult && (
                 <pre>{testResult}</pre>
             )}
-        </div>
-        <div className="d-flex">
+        </div> 
+            
             <div className="sidebar bg-light" style={{
                 width: '200px',
                 minHeight: '100vh',
