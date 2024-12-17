@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as client from './client';
+import { testConnection } from './client';
 import { FaTrash, FaEdit, FaDollarSign, FaCalendarAlt, FaInfoCircle, FaLink, FaWallet, FaMapMarkerAlt, FaBed } from 'react-icons/fa';
 
 function TravelList() {
@@ -23,7 +24,17 @@ function TravelList() {
     useEffect(() => {
         fetchTravels();
     }, []);
+    const TestConnection = () => {
+    const [testResult, setTestResult] = useState('');
 
+    const handleTest = async () => {
+        try {
+            const result = await testConnection();
+            setTestResult(JSON.stringify(result, null, 2));
+        } catch (error) {
+            setTestResult('Error: ' + error.message);
+        }
+    };
     const tampaTrips = travels.filter(t => t.destination.toLowerCase().includes('tampa'));
     const mexicoTrips = travels.filter(t => t.destination.toLowerCase().includes('mexico'));
 
@@ -174,6 +185,14 @@ function TravelList() {
     );
 
     return (
+        <div>
+            <button onClick={handleTest}>
+                测试连接
+            </button>
+            {testResult && (
+                <pre>{testResult}</pre>
+            )}
+        </div>
         <div className="d-flex">
             <div className="sidebar bg-light" style={{
                 width: '200px',
