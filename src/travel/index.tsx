@@ -16,7 +16,7 @@ function TravelList() {
         setTravels(sortedTravels);
     };
     const handleDelete = async (id: string) => {
-        if (window.confirm('没点错？')) {
+        if (window.confirm('确定删除？')) {
             await client.deleteTravel(id);
             fetchTravels();
         }
@@ -199,7 +199,7 @@ function TravelList() {
     return (
         
         <div className="d-flex">
-            <TestConnection />
+            
           
             
             <div className="sidebar bg-light" style={{
