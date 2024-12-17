@@ -25,15 +25,27 @@ function TravelList() {
         fetchTravels();
     }, []);
     const TestConnection = () => {
-    const [testResult, setTestResult] = useState('');
+        const [testResult, setTestResult] = useState('');
 
-    const handleTest = async () => {
-        try {
-            const result = await testConnection();
-            setTestResult(JSON.stringify(result, null, 2));
-        } catch (error) {
-            setTestResult('Error: ' + error.message);
-        }
+        const handleTest = async () => {
+            try {
+                const result = await client.testConnection();
+                setTestResult(JSON.stringify(result, null, 2));
+            } catch (error) {
+                setTestResult('Error: ' + error);
+            }
+        };
+
+        return (
+            <div>
+                <button onClick={handleTest}>
+                    测试连接
+                </button>
+                {testResult && (
+                    <pre>{testResult}</pre>
+                )}
+            </div>
+        );
     };
     const tampaTrips = travels.filter(t => t.destination.toLowerCase().includes('tampa'));
     const mexicoTrips = travels.filter(t => t.destination.toLowerCase().includes('mexico'));
@@ -187,15 +199,8 @@ function TravelList() {
     return (
         
         <div className="d-flex">
-            
-          <div>
-            <button onClick={handleTest}>
-                测试连接
-            </button>
-            {testResult && (
-                <pre>{testResult}</pre>
-            )}
-        </div> 
+            <TestConnection />
+          
             
             <div className="sidebar bg-light" style={{
                 width: '200px',
