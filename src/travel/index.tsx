@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as client from './client';
 import { testConnection } from './client';
-import { FaTrash, FaEdit, FaDollarSign, FaCalendarAlt, FaInfoCircle, FaLink, FaWallet, FaMapMarkerAlt, FaBed } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaDollarSign, FaCalendarAlt, FaInfoCircle, FaLink,FaPlus, FaWallet, FaMapMarkerAlt, FaBed } from 'react-icons/fa';
 
 function TravelList() {
     const [travels, setTravels] = useState<any[]>([]);
@@ -59,7 +59,7 @@ function TravelList() {
                     state={{ defaultDestination: destination }}
                     className="btn btn-primary"
                 >
-                    新行程
+                    <FaPlus/>
                 </Link>
             </div>
             <div className="travel-list">
@@ -109,31 +109,21 @@ function TravelList() {
                                         )}
 
                                         {(travel.startDate || travel.endDate) && (
-                                            <div className="text-muted">
-                                                <FaCalendarAlt />
-                                                {travel.startDate && (
-                                                    <span>
-                                                        {new Date(travel.startDate).toLocaleString('zh-CN', {
-                                                            month: '2-digit',
-                                                            day: '2-digit',
-                                                            hour: '2-digit',
-                                                            minute: '2-digit'
-                                                        })}
-                                                    </span>
-                                                )}
-                                                {travel.endDate && (
-                                                    <span>
-                                                        {travel.startDate ? ' - ' : ''}
-                                                        {new Date(travel.endDate).toLocaleString('zh-CN', {
-                                                            month: '2-digit',
-                                                            day: '2-digit',
-                                                            hour: '2-digit',
-                                                            minute: '2-digit'
-                                                        })}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        )}
+    <div className="text-muted">
+        <FaCalendarAlt />
+        {travel.startDate && (
+            <span>
+                {new Date(travel.startDate).toISOString().slice(0, 16).replace('T', ' ')}
+            </span>
+        )}
+        {travel.endDate && (
+            <span>
+                {travel.startDate ? ' - ' : ''}
+                {new Date(travel.endDate).toISOString().slice(0, 16).replace('T', ' ')}
+            </span>
+        )}
+    </div>
+)}
 
                                         {travel.budget > 0 && (
                                             <div className="text-muted">
