@@ -57,7 +57,7 @@ function TravelList() {
 
     const filteredTravels = (trips: any[]) => {
         if (selectedTags.length === 0) return trips;
-        return trips.filter(trip => 
+        return trips.filter(trip =>
             trip.tags?.some((tag: string) => selectedTags.includes(tag))
         );
     };
@@ -69,7 +69,7 @@ function TravelList() {
                 {Object.entries(TAG_CONFIG).map(([tag, config]) => {
                     const TagIcon = config.icon;
                     const isSelected = selectedTags.includes(tag);
-                    
+
                     return (
                         <button
                             key={tag}
@@ -84,8 +84,8 @@ function TravelList() {
                                 transition: 'all 0.3s ease'
                             }}
                             onClick={() => {
-                                setSelectedTags(prev => 
-                                    isSelected 
+                                setSelectedTags(prev =>
+                                    isSelected
                                         ? prev.filter(t => t !== tag)
                                         : [...prev, tag]
                                 );
@@ -109,7 +109,7 @@ function TravelList() {
                     state={{ defaultDestination: destination }}
                     className="btn btn-primary"
                 >
-                    <FaPlus/>
+                    <FaPlus />
                 </Link>
             </div>
             <div className="travel-list">
@@ -126,120 +126,69 @@ function TravelList() {
                                     margin: '15px 0'
                                 }}
 
-                            onMouseOver={(e) => {
-                                if (travel.url) {
-                                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-5px)';
-                                }
-                            }}
-                            onMouseOut={(e) => {
-                                (e.currentTarget as HTMLElement).style.transform = 'none';
-                            }}
-                        >
-                            <div className="card-body" style={{ padding: '20px' }}>
-                                <div className="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h5 
-                                            className="card-title mb-2" 
-                                            style={{ 
-                                                fontSize: '1.4rem',
-                                                cursor: travel.url ? 'pointer' : 'default' 
-                                            }}
-                                            onClick={() => {
-                                                if (travel.url) {
-                                                    window.open(travel.url, '_blank');
-                                                }
-                                            }}
-                                        >
-                                            {travel.title}
-                                        </h5>
-                                        
-                                        <div className="d-flex gap-2 mb-2">
-                                            {travel.tags?.map((tag: string) => {
-                                                const tagConfig = TAG_CONFIG[tag as keyof typeof TAG_CONFIG];
-                                                if (!tagConfig) return null;
-                                                
-                                                const TagIcon = tagConfig.icon;
-                                                return (
-                                                    <span 
-                                                        key={tag}
-                                                        className="badge"
-                                                        style={{
-                                                            backgroundColor: tagConfig.color,
-                                                            color: 'white',
-                                                            padding: '5px 10px',
-                                                            borderRadius: '15px',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            gap: '5px',
-                                                            fontSize: '0.9rem'
-                                                        }}
-                                                    >
-                                                        <TagIcon size={14} />
-                                                        {tag}
-                                                    </span>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-
-                                    <div className="d-flex align-items-center" style={{ gap: '25px', fontSize: '1.2rem' }}>
-                                        {travel.url && (
-                                            <div className="text-muted">
-                                                <FaLink />
-                                            </div>
-                                        )}
-
-{(travel.startDate || travel.endDate) && (
-    <div className="text-muted">
-        <FaCalendarAlt />
-        {travel.startDate && (
-            <span>
-                {new Date(travel.startDate).toISOString().slice(0, 16).replace('T', ' ')}
-            </span>
-        )}
-        {travel.endDate && (
-            <span>
-                {travel.startDate ? ' - ' : ''}
-                {new Date(travel.endDate).toISOString().slice(0, 16).replace('T', ' ')}
-            </span>
-        )}
-    </div>
-)}
-
-                                        {travel.budget > 0 && (
-                                            <div 
-                                                className="text-muted"
-                                                style={{ cursor: 'pointer' }}
-                                                onClick={() => {
-                                                    navigate('/expenses', {
-                                                        state: {
-                                                            amount: travel.budget,
-                                                            description: travel.title,
-                                                            date: travel.startDate
+                                onMouseOver={(e) => {
+                                    if (travel.url) {
+                                        (e.currentTarget as HTMLElement).style.transform = 'translateY(-5px)';
+                                    }
+                                }}
+                                onMouseOut={(e) => {
+                                    (e.currentTarget as HTMLElement).style.transform = 'none';
+                                }}
+                            >
+                                <div className="card-body" style={{ padding: '20px' }}>
+                                    <div className="d-flex flex-column">
+                                        <div className="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h5 
+                                                    className="card-title mb-2" 
+                                                    style={{ 
+                                                        fontSize: '1.4rem',
+                                                        cursor: travel.url ? 'pointer' : 'default' 
+                                                    }}
+                                                    onClick={() => {
+                                                        if (travel.url) {
+                                                            window.open(travel.url, '_blank');
                                                         }
-                                                    });
-                                                }}
-                                            >
-                                                <FaDollarSign />
-                                                {travel.budget}
+                                                    }}
+                                                >
+                                                    {travel.title}
+                                                    {travel.url && <FaLink className="ms-2" style={{ fontSize: '1rem' }} />}
+                                                </h5>
+                                                
+                                                <div className="d-flex gap-2">
+                                                    {travel.tags?.map((tag: string) => {
+                                                        const tagConfig = TAG_CONFIG[tag as keyof typeof TAG_CONFIG];
+                                                        if (!tagConfig) return null;
+                                                        
+                                                        const TagIcon = tagConfig.icon;
+                                                        return (
+                                                            <span 
+                                                                key={tag}
+                                                                className="badge"
+                                                                style={{
+                                                                    backgroundColor: tagConfig.color,
+                                                                    color: 'white',
+                                                                    padding: '5px 10px',
+                                                                    borderRadius: '15px',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    gap: '5px',
+                                                                    fontSize: '0.9rem'
+                                                                }}
+                                                            >
+                                                                <TagIcon size={14} />
+                                                                {tag}
+                                                            </span>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
-                                        )}
 
                                             <div className="d-flex">
                                                 <button
                                                     onClick={() => {
                                                         navigate(`/travel/edit/${travel._id}`, {
-                                                            state: {
-                                                                travel,
-                                                                editMode: true,
-                                                                defaultDestination: travel.destination,
-                                                                title: travel.title,
-                                                                startDate: travel.startDate,
-                                                                endDate: travel.endDate,
-                                                                budget: travel.budget,
-                                                                description: travel.description,
-                                                                url: travel.url
-                                                            }
+                                                            state: { travel }
                                                         });
                                                     }}
                                                     className="btn btn-link text-primary me-2"
@@ -250,14 +199,51 @@ function TravelList() {
                                                 <button
                                                     onClick={() => handleDelete(travel._id)}
                                                     className="btn btn-link text-danger"
-                                                    style={{
-                                                        padding: '8px',
-                                                        fontSize: '1.2rem'
-                                                    }}
+                                                    style={{ padding: '4px' }}
                                                 >
                                                     <FaTrash />
                                                 </button>
                                             </div>
+                                        </div>
+
+                                        <div className="d-flex justify-content-between align-items-center mt-3 pt-3" 
+                                             style={{ borderTop: '1px solid #eee' }}>
+                                            <div className="text-muted" style={{ fontSize: '1.1rem' }}>
+                                                <FaCalendarAlt className="me-2" />
+                                                {travel.startDate && (
+                                                    <span>
+                                                        {new Date(travel.startDate).toISOString().slice(0, 16).replace('T', ' ')}
+                                                    </span>
+                                                )}
+                                                {travel.endDate && (
+                                                    <span>
+                                                        {travel.startDate ? ' - ' : ''}
+                                                        {new Date(travel.endDate).toISOString().slice(0, 16).replace('T', ' ')}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {travel.budget > 0 && (
+                                                <div 
+                                                    className="text-muted"
+                                                    style={{ 
+                                                        cursor: 'pointer',
+                                                        fontSize: '1.1rem'
+                                                    }}
+                                                    onClick={() => {
+                                                        navigate('/expenses', {
+                                                            state: {
+                                                                amount: travel.budget,
+                                                                description: travel.title,
+                                                                date: travel.startDate
+                                                            }
+                                                        });
+                                                    }}
+                                                >
+                                                    <FaDollarSign className="me-1" />
+                                                    {travel.budget}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
