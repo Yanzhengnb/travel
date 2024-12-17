@@ -48,3 +48,13 @@ export const deleteExpense = async (id: string) => {
     const response = await axios.delete(`${API_BASE}/expenses/${id}`);
     return response.data;
 };
+export const testConnection = async () => {
+    try {
+        const response = await axios.get(`${API_BASE}/test`);
+        console.log('Connection test:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Connection error:', error);
+        throw error;
+    }
+};
