@@ -179,12 +179,7 @@ function Expenses() {
             <div className="flex-grow-1 p-4">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <h1>消费记录</h1>
-                    <button 
-                        className="btn btn-success"
-                        onClick={() => setShowSettlement(true)}
-                    >
-                        结账
-                    </button>
+                    
                 </div>
 
                 {showSettlement && (
