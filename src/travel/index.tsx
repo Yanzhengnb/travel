@@ -70,7 +70,9 @@ function TravelList() {
                             style={{
                                 cursor: travel.url ? 'pointer' : 'default',
                                 transition: 'transform 0.2s',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                fontSize: '1.1rem',
+                                margin: '15px 0'
                             }}
 
                             onMouseOver={(e) => {
@@ -82,17 +84,16 @@ function TravelList() {
                                 (e.currentTarget as HTMLElement).style.transform = 'none';
                             }}
                         >
-                            <div className="card-body">
+                            <div className="card-body" style={{ padding: '20px' }}>
                                 <div className="d-flex justify-content-between align-items-start">
-                                    <h5 className="card-title mb-0" onClick={(e) => {
-                                if ((e.target as HTMLElement).tagName === 'BUTTON') return;
-                                if (travel.url) window.open(travel.url, '_blank');
-                            }}>{travel.title}</h5>
-                                    
-                                    <div className="d-flex align-items-center" style={{ gap: '20px' }}>
+                                    <h5 className="card-title mb-0" style={{ fontSize: '1.4rem' }}>
+                                        {travel.title}
+                                    </h5>
+
+                                    <div className="d-flex align-items-center" style={{ gap: '25px', fontSize: '1.2rem' }}>
                                         {travel.url && (
                                             <div className="text-muted">
-                                                <FaLink/>
+                                                <FaLink />
                                             </div>
                                         )}
 
@@ -133,8 +134,8 @@ function TravelList() {
                                         <div className="d-flex">
                                             <button
                                                 onClick={() => {
-                                                    navigate(`/travel/edit/${travel._id}`, { 
-                                                        state: { 
+                                                    navigate(`/travel/edit/${travel._id}`, {
+                                                        state: {
                                                             travel,
                                                             editMode: true,
                                                             defaultDestination: travel.destination,
@@ -144,7 +145,7 @@ function TravelList() {
                                                             budget: travel.budget,
                                                             description: travel.description,
                                                             url: travel.url
-                                                        } 
+                                                        }
                                                     });
                                                 }}
                                                 className="btn btn-link text-primary me-2"
@@ -155,7 +156,10 @@ function TravelList() {
                                             <button
                                                 onClick={() => handleDelete(travel._id)}
                                                 className="btn btn-link text-danger"
-                                                style={{ padding: '4px' }}
+                                                style={{
+                                                    padding: '8px',
+                                                    fontSize: '1.2rem'
+                                                }}
                                             >
                                                 <FaTrash />
                                             </button>
@@ -165,59 +169,66 @@ function TravelList() {
                             </div>
                         </div>
                         {travel.description && (
-                            <div className="mt-2 text-muted" style={{
+                            <div className="mt-3 text-muted" style={{
                                 borderTop: '1px solid #eee',
-                                paddingTop: '8px',
-                                fontSize: '0.9rem'
+                                paddingTop: '12px',
+                                fontSize: '1.1rem'
                             }}>
-                                <FaInfoCircle />
+                                <FaInfoCircle className="me-2" />
                                 {travel.description}
                             </div>
                         )}
                         {travel.address && (
-    <div className="mt-2" style={{
-        borderTop: '1px solid #eee',
-        paddingTop: '8px'
-    }}>
-        <a 
-            href={`maps://?q=${encodeURIComponent(travel.address)}`}
-            className="text-primary"
-            style={{ textDecoration: 'none' }}
-        >
-            <FaMapMarkerAlt className="me-2"/>
-            {travel.address}
-        </a>
-    </div>
-)}
+                            <div className="mt-3" style={{
+                                borderTop: '1px solid #eee',
+                                paddingTop: '12px'
+                            }}>
+                                <a
+                                    href={`maps://?q=${encodeURIComponent(travel.address)}`}
+                                    className="text-primary"
+                                    style={{
+                                        textDecoration: 'none',
+                                        fontSize: '1.1rem',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <FaMapMarkerAlt className="me-2" />
+                                    {travel.address}
+                                </a>
+                            </div>
+                        )}
                     </div>
                 ))}
-                
+
             </div>
         </div>
     );
 
     return (
-        
+
         <div className="d-flex">
-            
-          
-            
+
+
+
             <div className="sidebar bg-light" style={{
-                width: '200px',
+                width: '250px',
                 minHeight: '100vh',
                 borderRight: '1px solid #dee2e6',
                 padding: '20px 0'
             }}>
                 <ul className="nav flex-column">
-                    
+                    <br /><br /><br />
+
                     <li className="nav-item">
-                        <Link className="nav-link" to="/TravelList">
-                            <FaMapMarkerAlt/>安排
+                        <Link className="nav-link" to="/TravelList" style={{ fontSize: '1.2rem', padding: '15px 20px' }}>
+                            <FaMapMarkerAlt className="me-3 center-text" />安排
                         </Link>
                     </li>
+                    <br />
                     <li className="nav-item">
-                        <Link className="nav-link" to="/expenses">
-                            <FaWallet/>消费
+                        <Link className="nav-link" to="/expenses" style={{ fontSize: '1.2rem', padding: '15px 20px' }}>
+                            <FaWallet className="me-3 center-block" />消费
                         </Link>
                     </li>
                 </ul>
